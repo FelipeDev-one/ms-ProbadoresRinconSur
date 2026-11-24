@@ -38,4 +38,19 @@ public class Probador {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoProbador estado;
+
+    // Desde cuándo está en este estado (epoch en milisegundos).
+    @Column(nullable = false)
+    private Long desde;
+
+    // Uso en curso (si está ocupado).
+    @Column(name = "uso_activo_id", length = 40)
+    private String usoActivoId;
+
+    @Column(name = "motivo_fuera_servicio", length = 120)
+    private String motivoFueraServicio;
+
+    // Ruta de la foto de evidencia en el teléfono que la tomó.
+    @Column(name = "foto_evidencia", length = 300)
+    private String fotoEvidencia;
 }

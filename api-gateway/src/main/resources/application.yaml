@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            # ---------------- APIs ----------------
+            - id: probadores
+              uri: lb://probadores-service
+              predicates:
+                - Path=/api/probadores,/api/probadores/**
+            - id: turnos
+              uri: lb://turnos-service
+              predicates:
+                - Path=/api/turnos,/api/turnos/**
+            - id: usuarios
+              uri: lb://usuarios-service
+              predicates:
+                - Path=/api/usuarios,/api/usuarios/**
+            # ------ Documentación OpenAPI de cada servicio (para el Swagger unificado) ------
+            - id: docs-probadores
+              uri: lb://probadores-service
+              predicates:
+                - Path=/docs/probadores
+              filters:
+                - SetPath=/v3/api-docs
+            - id: docs-turnos
+              uri: lb://turnos-service
+              predicates:
+                - Path=/docs/turnos
+              filters:
+                - SetPath=/v3/api-docs
+            - id: docs-usuarios
+              uri: lb://usuarios-service
+              predicates:
+                - Path=/docs/usuarios
+              filters:
+                - SetPath=/v3/api-docs
+
+# Swagger UI en http://localhost:8080/swagger-ui.html con un selector de servicio.
+springdoc:
+  swagger-ui:
+    urls:
+      - name: probadores-service
+        url: /docs/probadores
+      - name: turnos-service
+        url: /docs/turnos
+      - name: usuarios-service
+        url: /docs/usuarios
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true

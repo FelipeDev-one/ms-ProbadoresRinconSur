@@ -1,15 +1,20 @@
 package cl.duoc.rinconsur.turnos.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record TurnoResponse(
-        Long id,
+        String id,
         String codigo,
         Integer numero,
-        Integer prendas,
+        LocalDate fecha,
+        Long horaIngreso,
         Boolean preferente,
+        Integer prendas,
         String estado,
-        LocalDateTime horaIngreso,
+        Long horaLlamado,
+        Long horaCierre,
+        String motivoAbandono,
+        String registradoPor,
         String clienteRut
 ) {
 }

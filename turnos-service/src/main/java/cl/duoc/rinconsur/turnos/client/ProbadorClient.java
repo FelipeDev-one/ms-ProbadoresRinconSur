@@ -8,15 +8,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.server.ResponseStatusException;
 
-// Comunicación entre microservicios: turnos-service le pregunta a probadores-service
-// cuántos probadores hay libres y habilitados para estimar la espera.
+// turnos-service le pregunta a probadores-service cuántos probadores hay libres
+// y habilitados para estimar la espera. No comparten tablas: solo HTTP.
 @Component
 public class ProbadorClient {
 
     private final WebClient webClient;
 
-    public ProbadorClient(@Value("${probadores.service.url}") String probadoresUrl) {
-        this.webClient = WebClient.builder().baseUrl(probadoresUrl).build();
+    public ProbadorClient(WebClient.Builder builder, @Value("${probadores.service.url}") String url) {
+        this.webClient = builder.baseUrl(url).build();
     }
 
     public ResumenProbadoresDto resumen() {

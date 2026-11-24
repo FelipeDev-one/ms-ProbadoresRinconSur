@@ -4,7 +4,8 @@ public enum EstadoTurno {
     EN_ESPERA,
     LLAMADO,
     ATENDIDO,
-    ABANDONO;
+    ABANDONO,
+    NO_SE_PRESENTO;
 
     // En la fila: esperando o ya llamado al mesón.
     public boolean abierto() {

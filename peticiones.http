@@ -1,0 +1,99 @@
+### =====================================================================
+### Peticiones de prueba de los microservicios (a través del API Gateway)
+### Se ejecutan con la extensión "REST Client" de VS Code (botón "Send Request")
+### o se copian a Postman. Requiere MySQL, Eureka, los 3 servicios y el Gateway.
+### =====================================================================
+
+@gateway = http://localhost:8080
+@jefatura = 12984561-9
+@cliente = 19234587-1
+
+### -------------------------------------------------------------- usuarios-service
+
+### ¿La sección ya está configurada?
+GET {{gateway}}/api/usuarios/estado-inicial
+
+### Configuración inicial: crea la cuenta de jefatura
+POST {{gateway}}/api/usuarios/configuracion-inicial
+Content-Type: application/json
+
+{
+  "rut": "{{jefatura}}",
+  "nombre": "Patricia Morales",
+  "turnoLaboral": "MANANA",
+  "contrasena": "clave123"
+}
+
+### Registro de cliente
+POST {{gateway}}/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "rut": "{{cliente}}",
+  "nombre": "Ana Pérez",
+  "contrasena": "clave123"
+}
+
+### Validación: nombre vacío y contraseña débil (responde 400 con el error de cada campo)
+POST {{gateway}}/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "rut": "11.111.111-2",
+  "nombre": "",
+  "contrasena": "1"
+}
+
+### Ingreso con RUT y contraseña
+POST {{gateway}}/api/usuarios/login
+Content-Type: application/json
+
+{
+  "rut": "{{cliente}}",
+  "contrasena": "clave123"
+}
+
+### Ingreso con contraseña incorrecta (descuenta intentos; 5 fallos bloquean 1 minuto)
+POST {{gateway}}/api/usuarios/login
+Content-Type: application/json
+
+{
+  "rut": "{{cliente}}",
+  "contrasena": "otra999"
+}
+
+### Listar usuarios
+GET {{gateway}}/api/usuarios
+
+### Buscar una cuenta
+GET {{gateway}}/api/usuarios/{{cliente}}
+
+### -------------------------------------------------------------- probadores-service
+
+### Estado de los probadores
+GET {{gateway}}/api/probadores
+
+### Crear o actualizar un probador
+PUT {{gateway}}/api/probadores/P-01
+Content-Type: application/json
+
+{
+  "codigo": "P-01",
+  "tipo": "ESTANDAR",
+  "estado": "LIBRE",
+  "desde": 1795539949678
+}
+
+### Usos y cambios de estado
+GET {{gateway}}/api/probadores/usos
+
+###
+GET {{gateway}}/api/probadores/cambios
+
+### -------------------------------------------------------------- turnos-service
+
+### Turnos del día
+GET {{gateway}}/api/turnos?fecha=2026-11-25
+
+### Parámetros de la sección
+GET {{gateway}}/api/turnos/parametros
